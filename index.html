@@ -3,9 +3,35 @@
   <head>
     <title>Age of Time Map</title>
     <script>
-      window.onLoad = function() {
-        // Load data from file data.txt
-        // Draw map on canvas
+      window.onload = function() {
+        var water = 0.485723;
+        var file = new XMLHttpRequest();
+        file.onload = function() {
+          var ctx = document.getElementById("canvas").getContext("2d");
+          var id = ctx.getImageData(0, 0, 1, 1);
+          id.data[3] = 255;
+          var data = this.responseText;
+          var lines = data.split("\n");
+          for(var l = 0; l < lines.length - 1; l++) {
+            var parts = lines[l].split(" ");
+            var x = parseInt(parts[0]);
+            var y = parseInt(parts[1]);
+            var height = parseFloat(parts[2]);
+            if(height <= water) {
+              id.data[0] = 0;
+              id.data[1] = 0;
+              id.data[2] = Math.floor(height / water * 256);
+            } else {
+              id.data[0] = id.data[1] = id.data[2] = Math.floor((height - water) / (1 - water) * 256);
+            }
+            ctx.putImageData(id, x, y);
+            if(l % 2048 == 0) {
+              alert("delay");
+            }
+          }
+        }
+        file.open("get", "data.txt", true);
+        file.send();
       }
     </script>
   </head>
