@@ -4,10 +4,11 @@
     <title>Age of Time Map</title>
     <script>
       window.onload = function() {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
         var water = 0.485723;
         var file = new XMLHttpRequest();
         file.onload = function() {
-          var ctx = document.getElementById("canvas").getContext("2d");
           var id = ctx.getImageData(0, 0, 1, 1);
           id.data[3] = 255;
           var data = this.responseText;
